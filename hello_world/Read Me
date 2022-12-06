@@ -1,0 +1,461 @@
+Django Steps and Notes:
+
+Make a project folder 
+$  mkdir <project_folder_name>
+
+Enter the new project folder
+$  cd <“project_folder_name”>
+
+Clear terminal: control + k
+Quit RunServer with Control C
+
+Create Python virtual env 
+$  python3 -m venv <venv-name>
+
+Activate virtual env
+$  source <venv-name>/bin/activate
+
+To deactivate virtual env
+$  deactivate
+
+*Tip* put all Venvs in special Vents folder outside of project
+Or
+*Tip* put env in project as .venv
+
+Install Django into new venv
+$  pip install django
+
+Start new project in project directory
+$  python -m django startproject <project_name>
+
+Or
+
+$  python -m django-admin startproject <project_name>
+
+
+Enter the new project folder
+$  cd <“project_name”>>
+
+Start new app in project folder
+$  python -m django startapp <app_name>
+
+*Tip* Include use this to include a text file of all modules and installations needed to run your code
+$  pip freeze > requirements.txt
+
+Start webserver
+$. python manage.py runserver
+
+Go to localhost:8000 to see Django homepage
+
+-if steps aren’t working, first check what file you are in cd’d into, then check that venv is activated-
+
+
+
+Creating a database:
+
+Pip install postgres
+
+(HOW TO ACESS PSQL): Answer, we use Bash
+
+
+brew services start postgres
+
+In bash:
+
+$ createdb databse_name
+
+To enter PSQL enter:
+psql database_name
+To quit \q
+
+
+In settings.py change databases settings:
+
+‘ENGINE’: ‘django.db.backends.postgresql’,
+‘NAME’: ‘database_name’,
+
+
+Pip install psycopg2 (allows Django sql to talk to PostgresSQL)
+
+
+Alt way: in PSQL
+in psql:
+$ Sudo -I -u postgres
+$ psql
+$ create database <databse_name>;
+
+Connect App:
+
+
+Add app name to settings.py
+
+INSTALLED_APPS = [
+	‘……………..’,
+	‘app_name’,
+]
+
+Add app urls to project URL’s 
+
+path('',include("hello_world_app.urls")),
+
+Than create an app urls file 
+
+from django.urls import path, include
+from . import views
+
+urlpatterns = [
+    path('', views.index, name="index"),
+
+]
+
+Next create an index function in views
+
+from django.shortcuts import render
+
+# Create your views here.
+
+def index(request):
+    return render(request, "hello_world_app/index.html")
+
+Now create a HTML template
+
+
+
+
+Add Static connection:
+
+
+STATIC_URL = '/static/'
+import os
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+
+
+
+
+
+TO USE MODELS AND TESTS WITH POSTGRES
+
+-run 
+$  brew services start postgres
+
+-then you can run 
+$   python manage.py test
+
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py runserver (to test that models were migrated successfully)
+
+-if problem with models, delete migrations in in migration folder EXCEPT  __init__.py
+
+
+
+
+-Fixtures, Migrations, Templates folders should all be in App Folder
+
+-Static Folder on the same level as app and project folder
+
+
+
+MAKE MIGRATIONS BEFORE LOADING DATA FROM FIXTURES
+
+*Make Migrations Error*
+
+If you encounter default value feild, include a default value manual in the required feild in models.py
+
+Good examples: default = 1, default = “”
+
+Then run makemigrations, migrate again
+
+This is how you can update your models
+
+
+Load Data:
+
+Python manage.py loadata fixture_name.json
+
+If error key is not present in table, than you are loading the data out of order
+
+*LOAD THE SIMPLEST DATA MDOEL FIRST (the one that has no dependices)*
+
+You can reload fixtures multiple times, it will update database with any changes to json file
+
+python -m django dumpdata drops data from db
+
+
+psql database_name to view database
+
+\d database_table_name to view whole model table 
+
+
+To drop database:
+Psql database_name
+Drop database databse_name;
+
+
+TO LOAD REQUIREMENTS.TXT
+
+$  pip install -r requirements.txt
+
+
+DROP ENTIRE DATABASE
+Get to desktop folder
+psql -l (shows all db in computer)
+psql into a diffrent db on computer
+DROP DATABASE database_name;
+
+
+TROUBLESHOOTING:
+-install django
+-install postgres
+-install psycopg2
+-install all requirements that come up as errors
+
+
+Git commands:
+
+-create new repo on GitHub
+-git init on command line
+To add a repo to push to:
+	git remote add origin repo_link_address
+To checkout that origin was added:
+	-git status
+To stage all files:
+	- git add .
+	- git add “specific_file_name”
+Preparing for commit:
+	- git commit -m “add a message here”
+To push to GitHub:
+	- git push origin main
+
+
+
+
+How to update the database with a post request 
+(Avery’s Bookshelf Example)
+
+Step 1: html page 2 button is clicked that renders a new html page to add data through a views.py function
+
+Html 2 -> url.py -> views.py -> view function -> urls.py -> html page 3
+
+Step 2: html page 2: input form collect data and submit button activate a JS Function
+
+Html 3 -> Index.html -> static -> js -> main.js
+
+Step 3: main js page: JS function is written but instead of a return statement we have an Axis call that becomes a Post request with form data packaged into request.body
+
+Main.js -> re-runs same path on urls.py -> views.py -> same views function, but now it is in the form of a Post Request 
+
+Step 4: views.py function unloads packaged data into objects that form key value pairs between a Model requirement and the data input from the user
+
+Step 5. Views.py function saves new data variable into attached database
+
+Step 6: Javascript function then completes it function using Axios syntax .then((response) => {})  in our case this will bring the user back two url levels to html 1
+
+Main.js -> static -> urls.py -> views.py -> views.py function -> html 1 page render
+
+
+React
+
+Packages:
+
+React: main library
+ReactDom (render method)
+React Scripts package
+
+Webpack
+Babel
+
+Npm used for installing
+
+Npx used for install and use
+
+Venv’s are only used for installing Python dpenedicies per package
+
+Commands:
+
+npm create-react-app <name>
+
+-Or-
+
+npm create vite@latest
+-project name-
+-framework-
+
+Localhost:5173
+
+*my comp is Localhost:3000
+
+
+Component File  ->   Component Folder   ->  App.jsx   ->   Main.jsx
+
+npm run dev to start program
+
+
+npm install.  (This is akin to running pip install -r requirements.txt for Django projects)
+
+
+
+npm install react-router-dom --save
+
+npm install react-bootstrap bootstrap
+
+
+
+Command shift p: brings command line 
+Control P: can search files open on in vs explorer workspace
+Set default theme 
+Control B hides files on left
+Set theme for current file language [with Theme by Language extension] = (can set color for language you are typing in)
+
+also mac -- ctrl-shift-right will select the whole line rather than just duplicated it like option+shift does
+
+
+
+REACT Notes:
+
+Basic Component -> Parent Component -> App.jsx -> Main.jsx
+
+Format for Component File:
+
+1: Imports
+
+-hooks that will be used
+-libraries
+
+2: Function Call
+
+-declare the function that will export into App.jsx
+
+
+3 : Hooks
+
+Declare the hooks that you will use.
+
+Hook has 3 parts: Variable, a Function to Change the Variable, the Hook that function is utilizing (w/ initial value)
+
+Ie:
+
+const [counter, setCounter] = useState(0)
+
+counter is the variable
+to change it’s state we use setCounter
+The react hook we are using is useState, with an initial value of “0” assigned to counter
+
+Any time something happens to setCounter, it will use useState to change the value assigned to counter
+(A button is clicked and setCounter increases by +1 [this is defined in a separate function that uses setCounter])
+
+4: Hook Logic
+
+- This is where logic is written that effects your hook
+
+Ie: 
+
+	const incrementCounter = () =< {
+		setCounter(counter + 1)
+}
+
+5: Return Statement
+
+-HTML to be displayed on screen wrapped in a <div></div> tag
+-if component has child components you can call them here and add Props to pass down to this components
+
+Ie 
+
+Retrurn (
+
+	<div>
+
+	<MyButton handleClick={incrementCounter} />
+
+</div>
+)
+
+-this pass the incrementCounter logic down to the MyButton.jsx file where it can accessed in that files return statement
+
+6: Export Statement
+
+-need to export to use in other files
+
+Ie:
+
+Export default ButtonCounter
+
+More notes:
+
+To append data in and array we need to recreate our array locally and then add to it before updating the state
+
+To update:
+
+const [myData, setMyData] = useState([5, 3, 2])
+
+We need to sign our array to a new variable and spread it out using “…”:
+
+  const appendData = () => {
+
+    let newNum = Math.floor(Math.random() * 20)
+    let newData = [...myData, newNum] 
+
+    setMyData(newData) 
+  }
+
+
+
+
+
+
+Django and Recact Intergration
+
+
+
+
+Django and React
+
+-create folder
+-use two terminals to create a backend folder for django project and a frontend folder for a react vite project
+
+-does backend still need a venv: yes
+
+Automatically converts requests to JSON
+
+
+
+Don’t *need* to have separate Front End and Back End folders, but easy to separate them mentally
+
+Frontend: React Files
+
+BackEnd: 
+-Project Folder:
+—Project
+—App
+
+
+Have 1 Index View in views.py 
+
+-Static Files in Settings.py add
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+
+In react: npm run build
+
+This adds a Dist folder with HTML file (to be deleted)
+
+Connect the vite.config component to the static file in the backend and rerun npm run build.
+-this populates the Django static folder with all of the static assests and the base HTML file
+
+Run python manage.py run server and open up localhost:8000 and it should have all of the changes you have made to React
+
+Add Watcher to package.json
+
+“Scripts”: {
+…
+"watch": "vite build --watch"
+…
+}
+
